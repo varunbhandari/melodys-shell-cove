@@ -396,6 +396,7 @@ button:focus-visible,input:focus-visible{outline:3px solid #ffd23f;outline-offse
 <div class="tag">Ocean games</div>
 <button id="play" aria-label="Play"><svg width="72" height="80" viewBox="0 0 72 80"><path d="M12 8 L64 40 L12 72Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/></svg></button>
 <p id="offl" style="display:none">Ready to play offline.</p>
+<p style="font-size:13px;opacity:.75">Version 3</p>
 <p>Grown-ups: press and hold the gear in the corner for 3 seconds to change settings.</p>
 </div>
 
@@ -903,7 +904,12 @@ document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('dblclick',e=>e.preventDefault());
 showScene(1);placeShelly();placeMelody(0);
 window.__game={startLevel,goMenu,tryEvent,get state(){return state},get level(){return level}};
-if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){navigator.serviceWorker.register('sw.js').then(()=>navigator.serviceWorker.ready).then(()=>{$('#offl').style.display='block'}).catch(()=>{})}
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+ const hadCtl=!!navigator.serviceWorker.controller;let reloaded=false;
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadCtl&&!reloaded&&state==='title'){reloaded=true;location.reload()}});
+ navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update().catch(()=>{});return navigator.serviceWorker.ready}).then(()=>{$('#offl').style.display='block'}).catch(()=>{});
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')navigator.serviceWorker.getRegistration().then(r=>r&&r.update()).catch(()=>{})});
+}
 }
 </script>
 </body>
