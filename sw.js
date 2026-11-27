@@ -1,4 +1,4 @@
-const VERSION='v3';
+const VERSION='v4';
 const CACHE='shell-cove-'+VERSION;
 const FILES=['./','index.html','manifest.json','fonts/baloo-2-latin-600-normal.woff2','fonts/baloo-2-latin-800-normal.woff2','icons/icon-180.png','icons/icon-192.png','icons/icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>Promise.all(FILES.map(f=>fetch(f,{cache:'reload'}).then(r=>{if(r.ok)return c.put(f,r)}).catch(()=>{})))).then(()=>self.skipWaiting()))});
